@@ -3,7 +3,7 @@
 # Backup Synology system configuration and copy backup to another NAS
 #      Must be run as root or scheduled to run as root
 #
-# Tested on: DSM 6.2.4-25556 Update 6
+# Tested on: DSM 6.2.4-25556 Update 6 (should work on DSM 7)
 #
 # Author: 007revad
 # Date/Version: 2022-11-05 v5.0
@@ -13,8 +13,7 @@
 #--------------------------------------------------------------------------
 
 # Set where to save the exported configuration file
-#TARGET_DIR="/volume1/Backups/NAS_System_Backups/$( hostname )"
-TARGET_DIR="/volume1/Backups/NAS_System_Backups/DiskStation"
+TARGET_DIR=
 
 
 # Set to yes to enable remote backup. Anything else = no
@@ -23,7 +22,7 @@ REMOTE_BACKUP=yes
 # Where to copy the exported configuration file to
 REMOTE_PORT=22
 REMOTE_IP=
-REMOTE_DIR="/volume1/Backups/NAS_System_Backups/DiskStation"
+REMOTE_DIR=
 
 # Local and remote users with SSH key setup
 LOCAL_USER=
@@ -31,7 +30,7 @@ REMOTE_USER=
 
 
 #--------------------------------------------------------------------------
-#				 Nothing below here should need changing
+#               Nothing below here should need changing
 #--------------------------------------------------------------------------
 
 # Set backup filename
