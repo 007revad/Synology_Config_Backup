@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 #--------------------------------------------------------------------------
 # Backup Synology system configuration and copy backup to another NAS
-#      Must be run as root or scheduled to run as root
+#         Must be run as root or scheduled to run as root
 #
 # Tested on: DSM 6.2.4-25556 Update 6 (should work on DSM 7)
 #
 # Author: 007revad
 # Date/Version: 2022-11-05 v5.0
 #
+# Github: https://github.com/007revad/Synology_Config_Backup
 # Gist on Github: https://gist.github.com/007revad
 # Script verified at https://www.shellcheck.net/
 #--------------------------------------------------------------------------
@@ -30,7 +31,7 @@ REMOTE_USER=
 
 
 #--------------------------------------------------------------------------
-#               Nothing below here should need changing
+#                 Nothing below here should need changing
 #--------------------------------------------------------------------------
 
 # Set backup filename
