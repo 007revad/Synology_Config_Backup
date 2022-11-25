@@ -1,6 +1,8 @@
 # Synology_Config_Backup
  Backup and export your Synology DSM configuration.
 
+[![HitCount](https://hits.dwyl.com/007revad/Synology_Config_Backup.svg?style=flat-square)](http://hits.dwyl.com/007revad/Synology_Config_Backup)
+
 ### Description
 
 This is a bash script to backup a Synology's System Config, and optionally copy it via SCP to another server.
