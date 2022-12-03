@@ -49,6 +49,6 @@ REMOTE_USER=Bob
 
 ### Requirements
 
-If you want to schedule the script you run unattended, and have the script copy the backup to another server you need to have SSH keys setup so SCP can access the remote server without entering the user's password.
+If you want to schedule the script to run unattended, and have the script copy the backup to another server you need to have SSH keys setup so SCP can access the remote server without you entering the user's password.
 
 **Note:** Due to some of the commands used **this script needs to be run as root, or be scheduled to run as root**.
