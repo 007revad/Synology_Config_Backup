@@ -8,7 +8,7 @@
 
 This is a bash script to backup a Synology's System Config, and optionally copy it via SCP to another server.
 
-The script was written to work on DSM 7.x and DSM 6.x (though it has only been tested on DSM 6).
+Works on DSM 7 and DSM 6
 
 #### What the script does:
 
