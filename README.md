@@ -1,4 +1,4 @@
-# Synology_Config_Backup
+# Synology Config Backup
  Backup and export your Synology DSM configuration.
 
 <a href="https://github.com/007revad/Synology_Config_Backup/releases"><img src="https://img.shields.io/github/release/007revad/Synology_Config_Backup.svg"></a>
