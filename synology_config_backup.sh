@@ -6,7 +6,7 @@
 # Works on DMS 7 and DSM 6
 #
 # Author: 007revad
-# Date/Version: 2022-12-19 v1.0.1
+# Date/Version: 2023-02-12 v1.0.2
 #
 # Github: https://github.com/007revad/Synology_Config_Backup
 # Script verified at https://www.shellcheck.net/
@@ -15,22 +15,22 @@
 # Required Setting:
 
 # Set where to save the exported configuration file
-TARGET_DIR=
+Target_DIR=
 
 
 # Optional Remote Backup Settings:
 
 # Set to yes to enable remote backup. Anything else = no
-REMOTE_BACKUP=yes
+Remote_Backup=
 
 # Where to copy the exported configuration file to
-REMOTE_PORT=22
-REMOTE_IP=
-REMOTE_DIR=
+Remote_Port=22
+Remote_IP=
+Remote_DIR=
 
 # Local and remote users with SSH key setup
-LOCAL_USER=
-REMOTE_USER=
+Local_User=
+Remote_User=
 
 
 #--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ REMOTE_USER=
 # Set backup filename
 
 # Append date and time to backup file
-FILE_NAME="$( hostname )_$( date +%F_%H%M ).dss"
+File_Name="$( hostname )_$( date +%F_%H%M ).dss"
 
 
 #--------------------------------------------------------------------------
@@ -58,41 +58,59 @@ fi
 
 echo -e "Starting backup of Synology configuration on $( hostname )\n"
 
-if [[ ! -d $TARGET_DIR ]]; then
-	echo -e "\nBackup path does not exist:\n${TARGET_DIR}"
+if [[ ! -d $Target_DIR ]]; then
+	echo -e "\nBackup path does not exist:\n${Target_DIR}"
 	exit 255
 fi
 
-cd "${TARGET_DIR}" || exit 255
-/usr/syno/bin/synoconfbkp export --filepath="${TARGET_DIR}/${FILE_NAME}"
+cd "${Target_DIR}" || exit 255
+/usr/syno/bin/synoconfbkp export --filepath="${Target_DIR}/${File_Name}"
 
 # Check exported file exists
-if [[ ! -f ${TARGET_DIR}/${FILE_NAME} ]]; then
-	echo -e "ERROR: Backup file not created:\n${TARGET_DIR}/${FILE_NAME}"
+if [[ ! -f ${Target_DIR}/${File_Name} ]]; then
+	echo -e "ERROR: Backup file not created:\n${Target_DIR}/${File_Name}"
 	exit 255
 else
-	#echo "Synology configuration exported to $FILE_NAME on $( hostname )"
+	#echo "Synology configuration exported to $File_Name on $( hostname )"
 	#echo "Exported Synology configuration on $( hostname )"
 	echo "Export successful on $( hostname )"
 fi
 
 
 #--------------------------------------------------------------------------
+# Check if running on DSM 7 and target is is DSM 6
+
+# Get local DSM major version
+if [[ -f /etc/synoinfo.conf ]]; then Dsm_Local="$(get_key_value /etc.defaults/VERSION majorversion)"; fi
+
+# Get remote DSM major version
+ssh "${Remote_User}@${Remote_IP}" -p "$Remote_Port" "sudo Dsm_Remote=$(get_key_value /etc.defaults/VERSION majorversion)"
+
+
+#--------------------------------------------------------------------------
 # Copy backup to remote NAS
 
 # Get remote NAS hostname
-REMOTE_HOST=$(nmblookup -A $REMOTE_IP | sed -n 2p | cut -d ' ' -f1)
-REMOTE_HOST="${REMOTE_HOST:1}"
+Remote_Host=$(nmblookup -A $Remote_IP | sed -n 2p | cut -d ' ' -f1)
+Remote_Host="${Remote_Host:1}"
 
-if [[ $REMOTE_BACKUP == "yes" ]]; then
+# Get local DSM major version
+Dsm_Local=$(get_key_value /etc.defaults/VERSION majorversion)
+
+if [[ $Remote_Backup == "yes" ]]; then
 	#echo "Copying backup to other device"
-	if [[ $REMOTE_HOST ]]; then
-		echo -e "\nCopying backup to ${REMOTE_HOST}"
+	if [[ $Remote_Host ]]; then
+		echo -e "\nCopying backup to ${Remote_Host}"
 	else
-		echo -e "\nCopying backup to ${REMOTE_IP}"
+		echo -e "\nCopying backup to ${Remote_IP}"
 	fi
 	# Push backup to other device (safer for other device to pull backup from read only share)
-	sudo -u "${LOCAL_USER}" scp -P "${REMOTE_PORT}" "${TARGET_DIR}/${FILE_NAME}" "${REMOTE_USER}@${REMOTE_IP}:${REMOTE_DIR}/"
+    if [[ $Dsm_Local == 7 ]]; then
+        # -O flag is required if DSM7 is the source or SCP defaults to SFTP
+        sudo -u "${Local_User}" scp -O -P "${Remote_Port}" "${Target_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:${Remote_DIR}/"
+    else
+        sudo -u "${Local_User}" scp -P "${Remote_Port}" "${Target_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:${Remote_DIR}/"
+    fi
 fi
 
 
