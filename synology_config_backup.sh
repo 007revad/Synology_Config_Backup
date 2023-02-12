@@ -6,7 +6,7 @@
 # Works on DMS 7 and DSM 6
 #
 # Author: 007revad
-# Date/Version: 2023-02-12 v1.0.2
+# Date/Version: 2023-02-12 v1.0.3
 #
 # Github: https://github.com/007revad/Synology_Config_Backup
 # Script verified at https://www.shellcheck.net/
