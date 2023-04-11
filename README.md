@@ -22,6 +22,10 @@ Works on DSM 7 and DSM 6
 
 **Example of the backup's auto-generated filename:** DISKSTATION_2022-11-07_0600.dss
 
+### Download the script
+
+See <a href=images/how_to_download_generic.png/>How to download the script</a> for the easiest way to download the script.
+
 ### Settings
 
 You need to set **TARGET_DIR=** near the top of the script (below the header). Set it to the location where you want the backup saved to. 
