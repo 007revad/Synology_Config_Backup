@@ -54,6 +54,18 @@ LOCAL_USER=Bob
 REMOTE_USER=Bob
 ```
 
+If you set REMOTE2_BACKUP=yes you also need to set the REMOTE2_PORT, REMOTE2_IP, REMOTE2_DIR, LOCAL2_USER and REMOTE2_USER to suit your setup.
+
+**For example:**
+
+```YAML
+REMOTE2_PORT=22
+REMOTE2_IP=192.168.0.111
+REMOTE2_DIR="/volume1/Backups/NAS_System_Backups/DiskStation"
+LOCAL2_USER=Bob
+REMOTE2_USER=Bob
+```
+
 ### Requirements
 
 If you want to schedule the script to run unattended, and have the script copy the backup to another server you need to have SSH keys setup so SCP can access the remote server without you entering the user's password.
