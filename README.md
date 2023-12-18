@@ -63,7 +63,7 @@ REMOTE2_PORT=22
 REMOTE2_IP=192.168.0.111
 REMOTE2_DIR="/volume1/Backups/NAS_System_Backups/DiskStation"
 LOCAL2_USER=Bob
-REMOTE2_USER=Bob
+REMOTE2_USER=Ted
 ```
 
 ### Requirements
