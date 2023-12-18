@@ -6,7 +6,7 @@
 # Works on DMS 7 and DSM 6
 #
 # Author: 007revad
-# Date/Version: 2023-02-12 v1.0.3
+# Date/Version: 2023-12-18 v1.1.4
 #
 # Github: https://github.com/007revad/Synology_Config_Backup
 # Script verified at https://www.shellcheck.net/
@@ -31,6 +31,21 @@ Remote_DIR=
 # Local and remote users with SSH key setup
 Local_User=
 Remote_User=
+
+
+# Optional 2nd Remote Backup Settings:
+
+# Set to yes to enable remote backup. Anything else = no
+Remote2_Backup=
+
+# Where to copy 2nd exported configuration file to
+Remote2_Port=22
+Remote2_IP=
+Remote2_DIR=
+
+# Local and 2nd remote users with SSH key setup
+Local2_User=
+Remote2_User=
 
 
 #--------------------------------------------------------------------------
@@ -64,11 +79,16 @@ if [[ ! -d $Target_DIR ]]; then
 fi
 
 cd "${Target_DIR}" || exit 255
-/usr/syno/bin/synoconfbkp export --filepath="${Target_DIR}/${File_Name}"
+if [[ -f "${Target_DIR}/${File_Name}" ]]; then
+	echo -e "ERROR: Backup file already exists: \n${Target_DIR}/${File_Name}"
+	exit 255
+else
+    /usr/syno/bin/synoconfbkp export --filepath="${Target_DIR}/${File_Name}" >/dev/null
+fi
 
-# Check exported file exists
+# Check exported file created
 if [[ ! -f ${Target_DIR}/${File_Name} ]]; then
-	echo -e "ERROR: Backup file not created:\n${Target_DIR}/${File_Name}"
+	echo -e "ERROR: Backup file not created: \n${Target_DIR}/${File_Name}"
 	exit 255
 else
 	#echo "Synology configuration exported to $File_Name on $( hostname )"
@@ -78,39 +98,36 @@ fi
 
 
 #--------------------------------------------------------------------------
-# Check if running on DSM 7 and target is is DSM 6
-
-# Get local DSM major version
-if [[ -f /etc/synoinfo.conf ]]; then Dsm_Local="$(get_key_value /etc.defaults/VERSION majorversion)"; fi
-
-# Get remote DSM major version
-ssh "${Remote_User}@${Remote_IP}" -p "$Remote_Port" "sudo Dsm_Remote=$(get_key_value /etc.defaults/VERSION majorversion)"
-
-
-#--------------------------------------------------------------------------
 # Copy backup to remote NAS
 
-# Get remote NAS hostname
-Remote_Host=$(nmblookup -A $Remote_IP | sed -n 2p | cut -d ' ' -f1)
-Remote_Host="${Remote_Host:1}"
-
-# Get local DSM major version
-Dsm_Local=$(get_key_value /etc.defaults/VERSION majorversion)
-
+# Remote backup
 if [[ $Remote_Backup == "yes" ]]; then
-	#echo "Copying backup to other device"
-	if [[ $Remote_Host ]]; then
-		echo -e "\nCopying backup to ${Remote_Host}"
-	else
-		echo -e "\nCopying backup to ${Remote_IP}"
-	fi
-	# Push backup to other device (safer for other device to pull backup from read only share)
-    if [[ $Dsm_Local == 7 ]]; then
-        # -O flag is required if DSM7 is the source or SCP defaults to SFTP
-        sudo -u "${Local_User}" scp -O -P "${Remote_Port}" "${Target_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:${Remote_DIR}/"
+    # Get remote NAS hostname
+    Remote_Host=$(nmblookup -A $Remote_IP | sed -n 2p | cut -d ' ' -f1)
+    Remote_Host="${Remote_Host:1}"
+
+    if [[ $Remote_Host ]]; then
+        echo -e "\nCopying backup to ${Remote_Host}"
     else
-        sudo -u "${Local_User}" scp -P "${Remote_Port}" "${Target_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:${Remote_DIR}/"
+        echo -e "\nCopying backup to ${Remote_IP}"
     fi
+    # Push backup to other device (safer for other device to pull backup from read only share)
+    sudo -u "${Local_User}" scp -P "${Remote_Port}" "${Remote_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:${Remote_DIR}/"
+fi
+
+# 2nd remote backup
+if [[ $Remote2_Backup == "yes" ]]; then
+    # Get remote NAS hostname
+    Remote2_Host=$(nmblookup -A $Remote2_IP | sed -n 2p | cut -d ' ' -f1)
+    Remote2_Host="${Remote2_Host:1}"
+
+    if [[ $Remote2_Host ]]; then
+        echo -e "\nCopying backup to ${Remote2_Host}"
+    else
+        echo -e "\nCopying backup to ${Remote2_IP}"
+    fi
+    # Push backup to other device (safer for other device to pull backup from read only share)
+    sudo -u "${Local2_User}" scp -P "${Remote2_Port}" "${Remote2_DIR}/${File_Name}" "${Remote2_User}@${Remote2_IP}:${Remote2_DIR}/"
 fi
 
 
@@ -120,3 +137,4 @@ fi
 echo -e "\nSynology configuration backup complete"
 
 exit
+
