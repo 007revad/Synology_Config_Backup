@@ -28,7 +28,7 @@ Works on DSM 7 and DSM 6
 1. Download the latest version _Source code (zip)_ from https://github.com/007revad/Synology_Config_Backup/releases
 2. Save the download zip file to a folder on the Synology.
 3. Unzip the zip file.
-4. 
+
 ### Settings
 
 You need to set **TARGET_DIR=** near the top of the script (below the header). Set it to the location where you want the backup saved to. 
