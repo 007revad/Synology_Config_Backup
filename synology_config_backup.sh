@@ -6,7 +6,7 @@
 # Works on DMS 7 and DSM 6
 #
 # Author: 007revad
-# Date/Version: 2023-12-18 v1.1.4
+# Date/Version: 2024-06-15 v1.1.5
 #
 # Github: https://github.com/007revad/Synology_Config_Backup
 # Script verified at https://www.shellcheck.net/
@@ -73,7 +73,7 @@ fi
 
 echo -e "Starting backup of Synology configuration on $( hostname )\n"
 
-if [[ ! -d $Target_DIR ]]; then
+if [[ ! -d "$Target_DIR" ]]; then
 	echo -e "\nBackup path does not exist:\n${Target_DIR}"
 	exit 255
 fi
@@ -87,7 +87,7 @@ else
 fi
 
 # Check exported file created
-if [[ ! -f ${Target_DIR}/${File_Name} ]]; then
+if [[ ! -f "${Target_DIR}/${File_Name}" ]]; then
 	echo -e "ERROR: Backup file not created: \n${Target_DIR}/${File_Name}"
 	exit 255
 else
@@ -103,7 +103,7 @@ fi
 # Remote backup
 if [[ $Remote_Backup == "yes" ]]; then
     # Get remote NAS hostname
-    Remote_Host=$(nmblookup -A $Remote_IP | sed -n 2p | cut -d ' ' -f1)
+    Remote_Host=$(nmblookup -A "$Remote_IP" | sed -n 2p | cut -d ' ' -f1)
     Remote_Host="${Remote_Host:1}"
 
     if [[ $Remote_Host ]]; then
@@ -112,13 +112,13 @@ if [[ $Remote_Backup == "yes" ]]; then
         echo -e "\nCopying backup to ${Remote_IP}"
     fi
     # Push backup to other device (safer for other device to pull backup from read only share)
-    sudo -u "${Local_User}" scp -P "${Remote_Port}" "${Remote_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:${Remote_DIR}/"
+    sudo -u "${Local_User}" scp -P "${Remote_Port}" "${Target_DIR}/${File_Name}" "${Remote_User}@${Remote_IP}:'${Remote_DIR}/'"
 fi
 
 # 2nd remote backup
 if [[ $Remote2_Backup == "yes" ]]; then
     # Get remote NAS hostname
-    Remote2_Host=$(nmblookup -A $Remote2_IP | sed -n 2p | cut -d ' ' -f1)
+    Remote2_Host=$(nmblookup -A "$Remote2_IP" | sed -n 2p | cut -d ' ' -f1)
     Remote2_Host="${Remote2_Host:1}"
 
     if [[ $Remote2_Host ]]; then
@@ -127,7 +127,7 @@ if [[ $Remote2_Backup == "yes" ]]; then
         echo -e "\nCopying backup to ${Remote2_IP}"
     fi
     # Push backup to other device (safer for other device to pull backup from read only share)
-    sudo -u "${Local2_User}" scp -P "${Remote2_Port}" "${Remote2_DIR}/${File_Name}" "${Remote2_User}@${Remote2_IP}:${Remote2_DIR}/"
+    sudo -u "${Local2_User}" scp -P "${Remote2_Port}" "${Target_DIR}/${File_Name}" "${Remote2_User}@${Remote2_IP}:'${Remote2_DIR}/'"
 fi
 
 
@@ -137,4 +137,3 @@ fi
 echo -e "\nSynology configuration backup complete"
 
 exit
-
