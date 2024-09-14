@@ -24,11 +24,10 @@ Works on DSM 7 and DSM 6
 
 **Example of the backup's auto-generated filename:** DISKSTATION_2022-11-07_0600.dss
 
-### Download the script
+</br>
 
-1. Download the latest version _Source code (zip)_ from https://github.com/007revad/Synology_Config_Backup/releases
-2. Save the download zip file to a folder on the Synology.
-3. Unzip the zip file.
+<p align="left">Viewing the result in "Task Scheduler > select task > Action > View Result > view details"</p>
+<p align="left"><img src="/images/result.png"></p>
 
 ### Settings
 
@@ -76,3 +75,25 @@ If you want to schedule the script to run unattended, and have the script copy t
 See https://blog.golimb.com/2020/10/03/synology-ssh-key-authentication/ for steps on setting up SSH key authentication.
 
 **Note:** Due to some of the commands used **this script needs to be run as root, or be scheduled to run as root**.
+
+### Download the script
+
+1. Download the latest version _Source code (zip)_ from https://github.com/007revad/Synology_Config_Backup/releases
+2. Save the download zip file to a folder on the Synology.
+3. Unzip the zip file.
+
+### Scheduling the script in Synology's Task Scheduler
+
+See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Scheduler</a>
+
+### Running the script via SSH
+
+[How to enable SSH and login to DSM via SSH](https://kb.synology.com/en-global/DSM/tutorial/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet)
+
+You run the script in a shell with sudo -s or as root.
+
+```YAML
+sudo -s /path-to-script/synology_config_backup.sh
+```
+
+**Note:** Replace /path-to-script/ with the actual path to the script on your Synology.
