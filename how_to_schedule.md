@@ -12,7 +12,7 @@ To schedule a script to run on your Synology at boot-up or shutdown follow these
 6. Click **Task Settings**.
 7. Optionally you can tick **Send run details by email** then enter your email address.
 8. In the box under **User-defined script** type the path to the script. 
-    - e.g. If you saved the script to a shared folder on volume1 called "scripts" you'd type: **/volume1/scripts/syno_cpu_temp.sh**
+    - e.g. If you saved the script to a shared folder on volume1 called "scripts" you'd type: **/volume1/scripts/synology_config_backup.sh**
 9. Click **OK** to save the settings.
 
 Here's some screenshots showing what needs to be set:
