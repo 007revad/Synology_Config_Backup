@@ -6,7 +6,7 @@
 # Works on DMS 7 and DSM 6
 #
 # Author: 007revad
-# Date/Version: 2024-06-15 v1.1.5
+# Date/Version: 2024-10-24 v1.1.6
 #
 # Github: https://github.com/007revad/Synology_Config_Backup
 # Script verified at https://www.shellcheck.net/
@@ -84,6 +84,8 @@ if [[ -f "${Target_DIR}/${File_Name}" ]]; then
 	exit 255
 else
     /usr/syno/bin/synoconfbkp export --filepath="${Target_DIR}/${File_Name}" >/dev/null
+    chown admin:administrators "${Target_DIR}/${File_Name}"
+    #chmod 770 "${Target_DIR}/${File_Name}"
 fi
 
 # Check exported file created
